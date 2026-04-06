@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0f172a" />
+
+    <!-- ── SEO & Social ─────────────────────────────────── -->
+    <meta
+      name="description"
+      content="LegalLens — A unified case management platform for law enforcement teams, forensic experts, and legal investigators."
+    />
+    <meta name="keywords" content="legal, case management, law enforcement, forensic, evidence, investigation" />
+    <meta name="author" content="LegalLens" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="LegalLens — Justice Through Intelligence" />
+    <meta property="og:description" content="Unified case management for law enforcement and forensic teams." />
+    <meta property="og:type" content="website" />
+
+    <!-- ── Icons & Manifest ──────────────────────────────── -->
+    <link rel="icon" type="image/svg+xml" href="%PUBLIC_URL%/favicon.svg" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- ── Fonts ─────────────────────────────────────────── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ── Boxicons (used throughout the app) ────────────── -->
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- ── Pre-render theme to prevent flash ─────────────── -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('ll_theme') || 'dark';
+          document.documentElement.setAttribute('data-theme', saved);
+          document.querySelector('meta[name="theme-color"]').setAttribute(
+            'content',
+            saved === 'light' ? '#f1f5f9' : '#0f172a'
+          );
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- ── Critical inline styles (prevent FOUC) ─────────── -->
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: #0f172a;
+        color: #f8fafc;
+      }
+
+      [data-theme='light'] body {
+        background-color: #f1f5f9;
+        color: #0f172a;
+      }
+
+      #root {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ── Loading Splash ──────────────────────────────────── */
+      #app-splash {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+        background: #0f172a;
+        z-index: 9999;
+        transition: opacity 0.4s ease, visibility 0.4s ease;
+      }
+
+      #app-splash.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .splash-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        animation: splashFade 0.6s ease forwards;
+      }
+
+      .splash-icon {
+        width: 52px;
+        height: 52px;
+        background: #4f46e5;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 40px rgba(79, 70, 229, 0.5);
+        animation: splashGlow 2s ease-in-out infinite;
+      }
+
+      .splash-name {
+        font-size: 1.85rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        color: #f8fafc;
+      }
+
+      .splash-name span {
+        color: #818cf8;
+      }
+
+      .splash-tagline {
+        font-size: 0.85rem;
+        color: #64748b;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        animation: splashFade 0.6s 0.15s ease both;
+      }
+
+      /* Spinner ring */
+      .splash-ring {
+        width: 36px;
+        height: 36px;
+        border: 3px solid rgba(79, 70, 229, 0.2);
+        border-top-color: #4f46e5;
+        border-radius: 50%;
+        animation: spinRing 0.9s linear infinite;
+      }
+
+      @keyframes spinRing {
+        to { transform: rotate(360deg); }
+      }
+
+      @keyframes splashFade {
+        from { opacity: 0; transform: translateY(12px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes splashGlow {
+        0%, 100% { box-shadow: 0 0 30px rgba(79, 70, 229, 0.4); }
+        50%       { box-shadow: 0 0 60px rgba(79, 70, 229, 0.7); }
+      }
+    </style>
+
+    <title>LegalLens — Case Management</title>
+  </head>
+
+  <body>
+    <noscript>
+      <div style="
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        height:100vh;
+        background:#0f172a;
+        color:#f8fafc;
+        font-family:Inter,sans-serif;
+        text-align:center;
+        padding:2rem;
+      ">
+        <div>
+          <svg width="48" height="48" viewBox="0 0 30 30" fill="none" style="margin-bottom:1rem">
+            <rect width="30" height="30" rx="8" fill="#4f46e5"/>
+            <line x1="15" y1="5" x2="15" y2="25" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="8" y1="8" x2="22" y2="8" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M8 8 L5.5 14 Q8 16.5 10.5 14 Z" fill="rgba(255,255,255,0.3)" stroke="white" stroke-width="1"/>
+            <path d="M22 8 L19.5 13 Q22 15.5 24.5 13 Z" fill="rgba(255,255,255,0.15)" stroke="white" stroke-width="1"/>
+            <path d="M11 25 H19" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <h2 style="margin:0 0 0.5rem;font-size:1.4rem">JavaScript Required</h2>
+          <p style="margin:0;color:#94a3b8;font-size:0.9rem">
+            LegalLens requires JavaScript to run. Please enable it in your browser settings.
+          </p>
+        </div>
+      </div>
+    </noscript>
+
+    <!-- Loading splash — hidden once React mounts -->
+    <div id="app-splash" aria-hidden="true">
+      <div class="splash-logo">
+        <div class="splash-icon">
+          <svg width="28" height="28" viewBox="0 0 30 30" fill="none">
+            <line x1="15" y1="4" x2="15" y2="26" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <line x1="7" y1="8" x2="23" y2="8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="M7 8 L4 15 Q7 18 10 15 Z" fill="rgba(255,255,255,0.35)" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
+            <path d="M23 8 L20 14 Q23 17 26 14 Z" fill="rgba(255,255,255,0.2)" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
+            <path d="M10 26 H20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="splash-name">Legal<span>Lens</span></span>
+      </div>
+      <p class="splash-tagline">Justice Through Intelligence</p>
+      <div class="splash-ring"></div>
+    </div>
+
+    <!-- React mounts here -->
+    <div id="root"></div>
+
+    <!-- Hide splash once React is ready -->
+    <script>
+      window.__hideSplash = function () {
+        var splash = document.getElementById('app-splash');
+        if (splash) {
+          splash.classList.add('hidden');
+          setTimeout(function () {
+            splash.style.display = 'none';
+          }, 450);
+        }
+      };
+
+      // Fallback: hide after 5 s even if React never fires
+      setTimeout(window.__hideSplash, 5000);
+    </script>
+  </body>
+</html>

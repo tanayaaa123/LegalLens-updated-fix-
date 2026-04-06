@@ -1,0 +1,4 @@
+# LegalLens — Case Management System
+# Restrict all search engine crawling (internal enterprise tool)
+User-agent: *
+Disallow: /

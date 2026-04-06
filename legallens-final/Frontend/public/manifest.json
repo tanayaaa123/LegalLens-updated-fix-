@@ -1,0 +1,30 @@
+{
+  "short_name": "LegalLens",
+  "name": "LegalLens — Case Management",
+  "description": "A unified case management platform for law enforcement teams, forensic experts, and legal investigators.",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#4f46e5",
+  "background_color": "#0f172a",
+  "orientation": "landscape-primary",
+  "categories": ["productivity", "utilities"],
+  "lang": "en"
+}

@@ -1,0 +1,569 @@
+/* ================================================================
+   LEGALLENS — ANIMATED LOGIN PAGE
+   ================================================================ */
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeSlideInLeft {
+  from { opacity: 0; transform: translateX(-30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes floatY {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+@keyframes rotateSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1; transform: scale(1.05); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes cardEntrance {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(79, 70, 229, 0.3); }
+  50%       { box-shadow: 0 0 40px rgba(79, 70, 229, 0.6); }
+}
+@keyframes particleFloat {
+  0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+}
+
+/* ── Page Layout ───────────────────────────────────────────────── */
+.loginPage {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 9999;
+}
+
+/* ── Left Panel ────────────────────────────────────────────────── */
+.left {
+  flex: 1.1;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.leftInner {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 2rem;
+  animation: fadeSlideInLeft 0.8s ease both;
+}
+
+.leftLogo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 2.5rem;
+}
+
+.leftLogoIcon {
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #4f46e5, #9333ea);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+.leftLogoText {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.5px;
+}
+.leftLogoText span { color: #818cf8; }
+
+.leftTagline {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  letter-spacing: -1px;
+}
+.leftTagline span {
+  background: linear-gradient(90deg, #818cf8, #c084fc, #818cf8);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+.leftDesc {
+  color: rgba(255,255,255,0.6);
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 340px;
+  margin: 0 auto 2.5rem;
+}
+
+.leftFeatures {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-align: left;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.leftFeatureItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.875rem;
+  font-weight: 500;
+  animation: fadeSlideInLeft 0.8s ease both;
+}
+.leftFeatureItem:nth-child(1) { animation-delay: 0.3s; }
+.leftFeatureItem:nth-child(2) { animation-delay: 0.45s; }
+.leftFeatureItem:nth-child(3) { animation-delay: 0.6s; }
+
+.leftFeatureDot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #4f46e5;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(79,70,229,0.8);
+}
+
+/* Floating geometric shapes */
+.leftBg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.bgOrb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+}
+.bgOrb1 {
+  width: 400px; height: 400px;
+  background: rgba(79,70,229,0.25);
+  top: -100px; left: -100px;
+  animation: floatY 6s ease-in-out infinite;
+}
+.bgOrb2 {
+  width: 300px; height: 300px;
+  background: rgba(147,51,234,0.2);
+  bottom: -80px; right: -80px;
+  animation: floatY 8s ease-in-out infinite reverse;
+}
+.bgOrb3 {
+  width: 200px; height: 200px;
+  background: rgba(99,102,241,0.15);
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+.bgGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Particles */
+.particle {
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: rgba(129,140,248,0.6);
+  animation: particleFloat linear infinite;
+}
+
+/* ── Right Panel ───────────────────────────────────────────────── */
+.right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+[data-theme="light"] .right { background: #ffffff; }
+
+/* ── Form Container ────────────────────────────────────────────── */
+.formContainer {
+  width: 100%;
+  max-width: 480px;
+  animation: fadeSlideIn 0.6s ease both;
+}
+
+/* ── Role Selection ────────────────────────────────────────────── */
+.roleSelectHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.roleSelectBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(79,70,229,0.08);
+  border: 1px solid rgba(79,70,229,0.2);
+  color: #4f46e5;
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.25rem;
+}
+
+.roleSelectTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.roleSelectSubtitle {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Cards Grid */
+.rolesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.roleCard {
+  padding: 1.5rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+  text-align: center;
+  background: white;
+  position: relative;
+  overflow: hidden;
+}
+.roleCard:nth-child(1) { animation: cardEntrance 0.5s ease both 0.1s; }
+.roleCard:nth-child(2) { animation: cardEntrance 0.5s ease both 0.2s; }
+.roleCard:nth-child(3) { animation: cardEntrance 0.5s ease both 0.3s; }
+.roleCard:nth-child(4) { animation: cardEntrance 0.5s ease both 0.4s; }
+
+.roleCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(79,70,229,0.05), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.roleCard:hover::before { opacity: 1; }
+
+.roleCard:hover {
+  border-color: #4f46e5;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(79,70,229,0.18);
+}
+
+.roleCardShine {
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+  transform: rotate(0deg) translateX(-100%);
+  transition: transform 0.6s ease;
+}
+.roleCard:hover .roleCardShine { transform: rotate(0deg) translateX(100%); }
+
+.roleIcon {
+  width: 52px; height: 52px;
+  margin: 0 auto 0.75rem;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+.roleCard:hover .roleIcon { transform: scale(1.1); }
+
+.roleCard h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.35rem;
+}
+.roleCard p {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ── Login Form ────────────────────────────────────────────────── */
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(79,70,229,0.06);
+  border: 1px solid rgba(79,70,229,0.15);
+  color: #4f46e5;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 1.75rem;
+  padding: 0.45rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+.backButton:hover { background: rgba(79,70,229,0.1); gap: 0.75rem; }
+.backButton i { font-size: 1.1rem; }
+
+.formHeader {
+  margin-bottom: 2rem;
+}
+.formHeader h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.5px;
+}
+.formHeader p { color: #64748b; font-size: 0.95rem; margin: 0; }
+
+.securityNotice {
+  display: flex;
+  gap: 1rem;
+  padding: 0.875rem 1rem;
+  background: linear-gradient(135deg, #f0f9ff, #eff6ff);
+  border: 1px solid #bae6fd;
+  border-radius: 10px;
+  margin-bottom: 1.75rem;
+}
+.securityNotice i { font-size: 1.4rem; color: #0284c7; }
+.securityNotice strong { display: block; color: #0c4a6e; font-size: 0.85rem; margin-bottom: 0.2rem; }
+.securityNotice p { color: #0369a1; font-size: 0.78rem; margin: 0; }
+
+.loginForm { margin-bottom: 1.25rem; }
+
+.inputGroup { margin-bottom: 1.25rem; }
+.inputGroup label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.45rem;
+  font-size: 0.875rem;
+}
+.inputWrapper { position: relative; }
+.inputWrapper input {
+  width: 100%;
+  padding: 0.825rem 3rem 0.825rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  box-sizing: border-box;
+  background: #f9fafb;
+  color: #0f172a;
+  outline: none;
+  font-family: inherit;
+}
+.inputWrapper input:focus {
+  border-color: #4f46e5;
+  background: #fafbff;
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+}
+.inputWrapper i {
+  position: absolute;
+  right: 1rem; top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.inputWrapper i:hover { color: #4f46e5; }
+
+.formUtils {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+.formUtils label {
+  display: flex; align-items: center; gap: 0.4rem;
+  color: #6b7280; cursor: pointer;
+}
+.formUtils a {
+  color: #4f46e5; font-weight: 600;
+  cursor: pointer; text-decoration: none;
+}
+.formUtils a:hover { color: #7c3aed; text-decoration: underline; }
+
+.submitBtn {
+  width: 100%;
+  padding: 0.95rem;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(79,70,229,0.35);
+  font-family: inherit;
+  letter-spacing: 0.02em;
+}
+.submitBtn:hover {
+  background: linear-gradient(135deg, #4338ca, #6d28d9);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(79,70,229,0.45);
+}
+.submitBtn:active { transform: translateY(0); }
+
+.formFooter {
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.875rem;
+  margin-top: 1.25rem;
+}
+.formFooter a { color: #4f46e5; font-weight: 600; text-decoration: none; }
+.formFooter a:hover { text-decoration: underline; }
+.linkBtnInline {
+  background: none;
+  border: none;
+  color: #4f46e5;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+}
+.linkBtnInline:hover { text-decoration: underline; }
+
+.error {
+  color: #ef4444;
+  font-size: 0.85rem;
+  margin: 0 0 1rem;
+  padding: 0.6rem 0.875rem;
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 8px;
+}
+
+/* ── Admin Request Popup ────────────────────────────────────────── */
+.adminRequestPopup {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  max-width: 340px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+  z-index: 99999;
+  animation: fadeSlideIn 0.4s ease both;
+}
+.adminRequestPopup h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+.adminRequestPopup p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .loginPage { flex-direction: column; }
+  .left { display: none; }
+  .right { flex: 1; }
+}
+
+/* ── Enhanced Admin Request Popup ──────────────────────────────── */
+.adminRequestPopup {
+  position: fixed;
+  bottom: 2rem; right: 2rem;
+  background: #161b2c;
+  border: 1px solid rgba(99,102,241,0.25);
+  border-radius: 14px;
+  padding: 1.25rem 1.25rem 1.25rem 1rem;
+  max-width: 360px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.45), 0 0 0 1px rgba(99,102,241,0.1);
+  z-index: 99999;
+  animation: fadeSlideIn 0.35s ease both;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+.popupIcon {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(52,211,153,0.15);
+  border: 1px solid rgba(52,211,153,0.3);
+  color: #34d399;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 700;
+  flex-shrink: 0;
+}
+.popupContent { flex: 1; }
+.popupContent h4 {
+  margin: 0 0 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+.popupContent p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+.popupClose {
+  background: none; border: none;
+  color: #475569; cursor: pointer;
+  padding: 2px; display: flex;
+  flex-shrink: 0; font-size: 1.1rem;
+  transition: color 0.2s;
+}
+.popupClose:hover { color: #e2e8f0; }

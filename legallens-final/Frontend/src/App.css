@@ -1,0 +1,293 @@
+/* ---------------- THEME COLORS ---------------- */
+:root {
+  --color-brand: #4f46e5; /* Indigo 600 */
+  --color-brand-hover: #4338ca; /* Indigo 700 */
+  --color-legal-dark: #0f172a; /* Slate 900 (Main BG) */
+  --color-legal-panel: #1e293b; /* Slate 800 (Cards) */
+  --text-primary: #f8fafc; /* Slate 50 */
+  --text-secondary: #94a3b8; /* Slate 400 */
+  --border-default: rgba(255, 255, 255, 0.05);
+}
+
+/* ---------------- BASE STYLES ---------------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--color-legal-dark);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  font-family:
+    "Inter",
+    -apple-system,
+    system-ui,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden; /* Prevents double scrollbars */
+}
+
+/* ---------------- LAYOUT STRUCTURE ---------------- */
+/* The appContainer ensures the Sidebar and MainContent sit side-by-side */
+.appContainer {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--color-legal-dark);
+}
+
+/* 1. Sidebar stays fixed width so it doesn't squish */
+.sideBar {
+  width: 260px;
+  min-width: 260px;
+  flex-shrink: 0;
+  height: 100%;
+  border-right: 1px solid var(--border-default);
+}
+
+/* 2. MainContentArea takes up ALL remaining space to the right */
+.mainContentArea {
+  flex: 1; /* This is the key fix to fill the screen */
+  height: 100%;
+  overflow-y: auto;
+  overflow-anchor: none;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------------- DASHBOARD STYLES ---------------- */
+/* Applying the radial glow effects from your screenshot */
+.dashboard-bg {
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(79, 70, 229, 0.15),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 90% 90%,
+      rgba(99, 102, 241, 0.1),
+      transparent 40%
+    ),
+    var(--color-legal-dark);
+}
+
+/* Global Card Styling */
+.glass-card {
+  background: rgba(30, 41, 59, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-default);
+  border-radius: 1rem;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(79, 70, 229, 0.4);
+  transform: translateY(-2px);
+}
+
+/* ---------------- CUSTOM SCROLLBAR ---------------- */
+.mainContentArea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.mainContentArea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mainContentArea::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.mainContentArea::-webkit-scrollbar-thumb:hover {
+  background: rgba(79, 70, 229, 0.4);
+}
+
+/* ============================================================
+   GLOBAL CONSISTENCY FIXES
+   ============================================================ */
+
+/* Ensure font inheritance everywhere */
+button,
+input,
+select,
+textarea {
+  font-family:
+    "Inter",
+    -apple-system,
+    system-ui,
+    sans-serif;
+}
+
+/* Smooth transitions for all interactive elements */
+a,
+button {
+  transition: all 0.2s ease;
+}
+
+/* Light mode global overrides */
+[data-theme="light"] body,
+[data-theme="light"] .appContainer {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+/* Ensure text visibility on hover everywhere in light mode */
+[data-theme="light"] p,
+[data-theme="light"] span,
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] td {
+  color: inherit;
+}
+
+[data-theme="light"] .navLabel {
+  color: inherit;
+}
+
+/* Fix select dropdowns in light mode */
+[data-theme="light"] select {
+  background-color: #f8fafc;
+  color: #0f172a;
+  border-color: #e2e8f0;
+}
+
+/* Fix for all inline styles using dark background in light mode */
+[data-theme="light"] .formSectionCard [style*="background: #0f172a"],
+[data-theme="light"] .formSectionCard [style*="background-color: #0f172a"] {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Fix settings page inline styles in light mode */
+[data-theme="light"] [style*="background: #0f172a"] {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+}
+[data-theme="light"] [style*="color: #fff"],
+[data-theme="light"] [style*="color: white"],
+[data-theme="light"] [style*="color: #e2e8f0"],
+[data-theme="light"] [style*="color: #cbd5e1"] {
+  /* Don't override — these may be intentional on colored elements */
+}
+
+/* Ensure all page wrappers use correct bg */
+[data-theme="light"] .dashboardMain,
+[data-theme="light"] .membersWrapper,
+[data-theme="light"] .createPageWrapper,
+[data-theme="light"] .casesPageContainer {
+  background-color: transparent;
+  color: #0f172a;
+}
+
+/* Ensure notification badge stays red in both themes */
+.sidebarNotifBadge {
+  background: #ef4444;
+  color: white;
+}
+
+/* Smooth nav transitions */
+.navItemLink {
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+/* Profile avatar border in light mode */
+[data-theme="light"] .profileAvatarLarge {
+  border-color: #e2e8f0;
+}
+
+/* Audit log in light mode */
+[data-theme="light"] .auditRow:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+[data-theme="light"] .auditPagination {
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Fix inline select styles in settings page */
+[data-theme="light"] select[style*="background: #0f172a"] {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Fix password fields in settings */
+[data-theme="light"] .formGrid input[style*="paddingRight"] {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Consistent table row hover */
+[data-theme="light"] .legalTable tr:hover {
+  background: rgba(79, 70, 229, 0.03);
+}
+[data-theme="dark"] .legalTable tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Fix modal overlay dark regardless of theme */
+.modalOverlay {
+  background: rgba(0, 0, 0, 0.65) !important;
+}
+
+/* ---- Modal Input (used in SettingsPage selects) ---- */
+.modalInput {
+  appearance: none;
+  background-color: #0f172a !important;
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #ffffff !important;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.modalInput:focus { border-color: #3b82f6; }
+[data-theme="light"] .modalInput {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0;
+}
+
+/* ---- Modal Field ---- */
+.modalField { display: flex; flex-direction: column; gap: 0.5rem; }
+.modalField label { font-size: 0.85rem; font-weight: 600; color: #94a3b8; }
+[data-theme="light"] .modalField label { color: #64748b; }
+
+/* ---- Fix appContainer for login page (no sidebar) ---- */
+.loginPage { width: 100vw; height: 100vh; overflow: hidden; display: flex; }
+
+/* Fix inline select/input dark bg in settings for light mode */
+[data-theme="light"] .settingRow select,
+[data-theme="light"] .settingRow .modalInput {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+[data-theme="light"] .modalBox {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.08);
+}
+[data-theme="light"] .modalTitle { color: #0f172a; }
+[data-theme="light"] .modalSubtitle { color: #64748b; }
+[data-theme="light"] .modalField label { color: #475569; }
+[data-theme="light"] .modalInput {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+[data-theme="light"] .modalHeader,
+[data-theme="light"] .modalFooter { border-color: rgba(0,0,0,0.06); }
+[data-theme="light"] .modalCloseBtn { color: #475569; }

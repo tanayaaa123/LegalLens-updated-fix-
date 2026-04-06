@@ -1,0 +1,16 @@
+.casesPageContainer {
+  padding: 1.5rem;
+  color: white;
+}
+
+.casesPageTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.casesListWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* space-y-2 */
+}
