@@ -78,7 +78,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use("/uploads", express.static(uploadsDir));
 
-// ── Auth middleware ────────────────────────────────────────────────────────────
+// Auth middleware 
 function authenticateToken(req, res, next) {
   const token = req.headers["authorization"]?.split(" ")[1];
   if (!token) return res.sendStatus(401);
@@ -96,14 +96,14 @@ function requireRole(...roles) {
       : res.status(403).json({ message: "Access denied" });
 }
 
-// ── Auto-increment helper ─────────────────────────────────────────────────────
+// Auto-increment helper
 async function nextSeq(Model, field) {
   const last = await Model.findOne().sort({ [field]: -1 });
   return (last?.[field] ?? 0) + 1;
 }
 
-// ── toObjectId helper ─────────────────────────────────────────────────────────
-// FIX: Converts any string/ObjectId to a proper Mongoose ObjectId for queries
+// toObjectId helper
+
 function toObjectId(id) {
   return new mongoose.Types.ObjectId(id);
 }
@@ -112,9 +112,7 @@ function escapeRegex(value = "") {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-// ── Notification helper ───────────────────────────────────────────────────────
-// FIX: Now stores user_id as ObjectId (not string) to match the Notification schema
-// This fixes: forgot password notifs, reset password notifs, case assignment notifs
+
 async function sendNotifications(userIds, message) {
   if (!userIds || !userIds.length) return;
   // Deduplicate and safely convert every id to ObjectId
@@ -127,7 +125,7 @@ async function sendNotifications(userIds, message) {
       try {
         uniqueObjectIds.push(toObjectId(str));
       } catch {
-        // skip any malformed ids
+      
       }
     }
   }
@@ -279,7 +277,7 @@ async function getCaseNotificationRecipients(
   ];
 }
 
-// ── Audit log helper ──────────────────────────────────────────────────────────
+
 async function logAction(userId, action, options = {}) {
   try {
     const normalized =
@@ -310,7 +308,7 @@ async function logAction(userId, action, options = {}) {
     console.error("logAction error:", e.message);
   }
 }
-// ── Case timeline event helper ────────────────────────────────────────────────
+
 async function createCaseEvent(caseId, title, description, userId, date) {
   await Event.create({
     event_id: await nextSeq(Event, "event_id"),
@@ -383,15 +381,12 @@ function resolveStoredFileUrl(fileUrl, caseId) {
   return normalized.startsWith("/uploads") ? normalized : `/uploads/${fileName}`;
 }
 
-// ── Database connection ───────────────────────────────────────────────────────
+
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB connected"))
+  .then(() => console.log(" MongoDB connected"))
   .catch((err) => console.error("MongoDB error:", err));
 
-// ════════════════════════════════════════════════════════════════════════════
-// PUBLIC ROUTES (no auth required)
-// ════════════════════════════════════════════════════════════════════════════
 
 // Login
 app.post("/login", async (req, res) => {
@@ -423,7 +418,7 @@ app.post("/login", async (req, res) => {
       { expiresIn: "8h" },
     );
 
-    // Fire-and-forget login notification (non-blocking)
+    
     (async () => {
       try {
         const loginMsg = `Welcome back, ${user.name}! You logged in as ${user.role_id.role_name.replace(/_/g, " ")}.`;
@@ -440,7 +435,7 @@ app.post("/login", async (req, res) => {
           });
         }
       } catch (e) {
-        // Non-fatal — don't block login
+     
       }
     })();
 
@@ -464,8 +459,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// ── Forgot password (public) ──────────────────────────────────────────────────
-// FIX: sendNotifications now stores ObjectIds correctly so admins receive the notif
+
 app.post("/password-reset-request-public", async (req, res) => {
   try {
     const email = req.body.email?.trim().toLowerCase();
@@ -534,12 +528,10 @@ app.post("/password-reset-request-public", async (req, res) => {
   }
 });
 
-// ════════════════════════════════════════════════════════════════════════════
-// PROTECTED ROUTES — all routes below require a valid JWT
-// ════════════════════════════════════════════════════════════════════════════
+
 app.use(authenticateToken);
 
-// ── Dashboard ─────────────────────────────────────────────────────────────────
+
 app.get("/dashboard", authenticateToken, async (req, res) => {
   try {
     const roleNames = {
@@ -555,8 +547,8 @@ app.get("/dashboard", authenticateToken, async (req, res) => {
   }
 });
 
-// ── NOTIFICATIONS ─────────────────────────────────────────────────────────────
-// FIX: All notification queries now use toObjectId() to match stored ObjectId user_id
+
+
 
 app.get("/notifications/unread-count", authenticateToken, async (req, res) => {
   try {
@@ -622,7 +614,8 @@ app.patch("/notifications/:id/read", authenticateToken, async (req, res) => {
   }
 });
 
-// ── AUDIT LOG ─────────────────────────────────────────────────────────────────
+
+
 app.get("/audit-logs", requireRole(1, 2), async (req, res) => {
   try {
     const { page = 1, limit = 15, search = "" } = req.query;
@@ -631,7 +624,8 @@ app.get("/audit-logs", requireRole(1, 2), async (req, res) => {
     let filter = {};
 
     if (req.user.role_id === 2) {
-      // FIX: toObjectId() for CaseMember query
+      
+      
       const memberships = await CaseMember.find({
         user_id: toObjectId(req.user.id),
       }).populate("case_id");
@@ -763,14 +757,15 @@ app.get("/audit-logs", requireRole(1, 2), async (req, res) => {
   }
 });
 
-// ── CASE STATS ────────────────────────────────────────────────────────────────
+
+
 app.get("/case-stats", authenticateToken, async (req, res) => {
   try {
     let cases;
     if (req.user.role_id === 1) {
       cases = await Case.find({});
     } else {
-      // FIX: toObjectId()
+      // : toObjectId()
       const memberships = await CaseMember.find({
         user_id: toObjectId(req.user.id),
       }).populate("case_id");
@@ -787,14 +782,14 @@ app.get("/case-stats", authenticateToken, async (req, res) => {
   }
 });
 
-// ── ALL CASES (CasesPage) ─────────────────────────────────────────────────────
+
 app.get("/cases", authenticateToken, async (req, res) => {
   try {
     let cases;
     if (req.user.role_id === 1) {
       cases = await Case.find({}).sort({ case_id: -1 });
     } else {
-      // FIX: toObjectId()
+     
       const memberships = await CaseMember.find({
         user_id: toObjectId(req.user.id),
       }).populate("case_id");
@@ -818,14 +813,15 @@ app.get("/cases", authenticateToken, async (req, res) => {
   }
 });
 
-// ── ASSIGNED CASES (Dashboard, up to 3) ──────────────────────────────────────
+
 app.get("/assigned-cases", authenticateToken, async (req, res) => {
   try {
     let cases;
     if (req.user.role_id === 1) {
       cases = await Case.find().sort({ priority: -1 }).limit(3);
     } else {
-      // FIX: toObjectId()
+     
+      
       const memberships = await CaseMember.find({
         user_id: toObjectId(req.user.id),
       }).populate("case_id");
@@ -849,7 +845,7 @@ app.get("/assigned-cases", authenticateToken, async (req, res) => {
   }
 });
 
-// ── RECENT OPEN CASES (Dashboard, up to 3) ───────────────────────────────────
+
 app.get("/recent-cases", authenticateToken, async (req, res) => {
   try {
     let cases;
@@ -858,7 +854,8 @@ app.get("/recent-cases", authenticateToken, async (req, res) => {
         .sort({ priority: -1 })
         .limit(3);
     } else {
-      // FIX: toObjectId()
+      
+      
       const memberships = await CaseMember.find({
         user_id: toObjectId(req.user.id),
       }).populate("case_id");
@@ -882,7 +879,6 @@ app.get("/recent-cases", authenticateToken, async (req, res) => {
   }
 });
 
-// ── SINGLE CASE ───────────────────────────────────────────────────────────────
 app.get("/case/:id", async (req, res) => {
   try {
     const caseDoc = await Case.findOne({
@@ -891,7 +887,7 @@ app.get("/case/:id", async (req, res) => {
     if (!caseDoc) return res.status(404).json({ message: "Case not found" });
 
     if (req.user.role_id !== 1) {
-      // FIX: toObjectId()
+      
       const membership = await CaseMember.findOne({
         case_id: caseDoc._id,
         user_id: toObjectId(req.user.id),
@@ -1026,7 +1022,7 @@ app.delete("/case/:id", requireRole(1), async (req, res) => {
   }
 });
 
-// ── CREATE CASE ───────────────────────────────────────────────────────────────
+//  CREATE CASE 
 app.post("/create-case", requireRole(1), async (req, res) => {
   try {
     const {
@@ -1123,7 +1119,7 @@ app.post("/create-case", requireRole(1), async (req, res) => {
   }
 });
 
-// ── CASE MEMBERS ──────────────────────────────────────────────────────────────
+
 app.post("/case/:caseId/member", requireRole(1), async (req, res) => {
   try {
     const caseDoc = await Case.findOne({
@@ -1233,7 +1229,7 @@ app.delete("/case/:caseId/member/:userId", requireRole(1), async (req, res) => {
   }
 });
 
-// ── EVIDENCE ──────────────────────────────────────────────────────────────────
+
 app.get("/case/:id/evidence", async (req, res) => {
   try {
     const caseDoc = await Case.findOne({
@@ -1242,7 +1238,7 @@ app.get("/case/:id/evidence", async (req, res) => {
     if (!caseDoc) return res.status(404).json({ message: "Case not found" });
 
     if (req.user.role_id !== 1) {
-      // FIX: toObjectId()
+      // : toObjectId()
       const membership = await CaseMember.findOne({
         case_id: caseDoc._id,
         user_id: toObjectId(req.user.id),
@@ -1288,7 +1284,7 @@ app.post("/case/:id/evidence", upload.single("file"), async (req, res) => {
     if (!caseDoc) return res.status(404).json({ message: "Case not found" });
 
     if (req.user.role_id !== 1) {
-      // FIX: toObjectId()
+      // : toObjectId()
       const membership = await CaseMember.findOne({
         case_id: caseDoc._id,
         user_id: toObjectId(req.user.id),
@@ -1458,7 +1454,7 @@ app.delete("/evidence/:id", requireRole(1), async (req, res) => {
   }
 });
 
-// ── USERS ─────────────────────────────────────────────────────────────────────
+
 app.get("/users", async (req, res) => {
   try {
     res.json(await User.find({}).populate("role_id"));
@@ -1538,7 +1534,7 @@ app.get("/users/filter", async (req, res) => {
   }
 });
 
-// ── ADMIN: MANAGE MEMBERS ─────────────────────────────────────────────────────
+
 app.post("/users/create", requireRole(1), async (req, res) => {
   try {
     const { name, email, role_name, Region, password } = req.body;
@@ -1617,7 +1613,6 @@ app.delete("/users/:userId", requireRole(1), async (req, res) => {
   }
 });
 
-// ── Get all roles ──────────────────────────────────────────────────────────
 app.get("/roles", async (req, res) => {
   try {
     const roles = await Role.find({});
@@ -1627,7 +1622,7 @@ app.get("/roles", async (req, res) => {
   }
 });
 
-// ── Get distinct regions ─────────────────────────────────────────────────────
+
 app.get("/regions", async (req, res) => {
   try {
     const regions = await User.distinct("Region");
@@ -1637,9 +1632,7 @@ app.get("/regions", async (req, res) => {
   }
 });
 
-// ── ADMIN: RESET MEMBER PASSWORD ──────────────────────────────────────────────
-// FIX: Uses sendNotifications directly (with ObjectId) instead of logAction
-// so the member actually receives the notification
+
 app.post("/users/:userId/reset-password", requireRole(1), async (req, res) => {
   try {
     const { newPassword } = req.body;
@@ -1716,7 +1709,7 @@ app.get("/all-cases", requireRole(1), async (req, res) => {
   }
 });
 
-// ── PROFILE ───────────────────────────────────────────────────────────────────
+
 app.get("/profile", async (req, res) => {
   try {
     const user = await User.findById(req.user.id).populate("role_id");
@@ -1786,8 +1779,7 @@ app.post("/profile/avatar", uploadAvatar.single("avatar"), async (req, res) => {
   }
 });
 
-// ── CHANGE PASSWORD (user changes their own) ──────────────────────────────────
-// FIX: Now sends a confirmation notification to the user after success
+
 app.post("/change-password", async (req, res) => {
   try {
     const currentPassword = req.body.currentPassword;
@@ -1838,7 +1830,7 @@ app.post("/change-password", async (req, res) => {
   }
 });
 
-// ── TIMELINE EVENTS ───────────────────────────────────────────────────────────
+
   app.get("/case/:id/events", async (req, res) => {
     try {
       const caseDoc = await Case.findOne({
@@ -1941,7 +1933,7 @@ app.post("/case/:id/events", async (req, res) => {
     if (!caseDoc) return res.status(404).json({ message: "Case not found" });
 
     if (req.user.role_id !== 1) {
-      // FIX: toObjectId()
+      // : toObjectId()
       const membership = await CaseMember.findOne({
         case_id: caseDoc._id,
         user_id: toObjectId(req.user.id),
@@ -2016,5 +2008,5 @@ app.delete("/case/:id/events/:eventId", requireRole(1, 2), async (req, res) => {
 });
 
 app.listen(process.env.PORT || 5000, () =>
-  console.log(`🚀 Server running on port ${process.env.PORT || 5000}`),
+  console.log(` Server running on port ${process.env.PORT || 5000}`),
 );
